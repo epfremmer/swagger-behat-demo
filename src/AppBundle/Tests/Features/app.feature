@@ -1,19 +1,29 @@
-Feature: I am testing my FE application
+Feature: Front-end application testing
 
-  Scenario: Articles API endpoint should return valid Articles response
+  Scenario: Home page displays
     Given I am authenticated
-    And I use the "Articles" schema
-    When I request "/v1/article"
+    When I am on the homepage
     Then the response status code should be 200
-    And the response should be json
-    And the response json key "data" should be valid
-    And print last response
+    And I should see "Hello world"
 
-  Scenario: Missing article ID should return Error response
+  Scenario: Articles page displays
     Given I am authenticated
-    And I use the "Error" schema
-    When I request "/v1/article/1000"
-    Then the response status code should be 404
-    And the response should be json
-    And the response json key "status" should be valid
-    And print last response
+    When I go to "/article"
+    Then the response status code should be 200
+    And I should see "Article list" in the "h1" element
+    And I should see an ".records_list" element
+
+  Scenario: I can create a new article
+    Given I am authenticated
+    When I go to "/article"
+    And the response status code should be 200
+    And I should see "Create a new entry" in the "a" element
+    And I follow "Create a new entry"
+    Then the response status code should be 200
+    And I should see an "form[name='appbundle_article']" element
+    And I fill in "Title" with "Test Title"
+    And I fill in "Content" with "Test Content"
+    And I press "Create"
+    Then the url should match "/article/1"
+    And I should see "Test Title"
+    And I should see "Test Content"
