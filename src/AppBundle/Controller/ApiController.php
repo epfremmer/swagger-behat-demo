@@ -2,11 +2,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\StatsBundle\Response\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Entity\Article;
 use AppBundle\Form\ArticleType;
 
@@ -15,24 +15,20 @@ use AppBundle\Form\ArticleType;
  *
  * @Route("/v1")
  */
-class ArticleController extends Controller
+class ApiController extends Controller
 {
 
     /**
      * Lists all Article entities.
      *
      * @Route("/", name="api_default")
+     * @Route("/{$name}", name="api_default")
      * @Method("GET")
+     * @return JsonResponse
      */
-    public function defaultAction()
+    public function defaultAction($name = 'world')
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('AppBundle:Article')->findAll();
-
-        return array(
-            'entities' => $entities,
-        );
+        return new JsonResponse(sprintf('hello %s', $name));
     }
 
     /**
@@ -40,7 +36,7 @@ class ArticleController extends Controller
      *
      * @Route("/", name="api_article")
      * @Method("GET")
-     * @Template()
+     * @return JsonResponse
      */
     public function indexAction()
     {
@@ -48,9 +44,7 @@ class ArticleController extends Controller
 
         $entities = $em->getRepository('AppBundle:Article')->findAll();
 
-        return array(
-            'entities' => $entities,
-        );
+        return new JsonResponse($entities);
     }
 
     /**
@@ -58,7 +52,7 @@ class ArticleController extends Controller
      *
      * @Route("/", name="api_article_create")
      * @Method("POST")
-     * @Template("AppBundle:Article:new.html.twig")
+     * @return JsonResponse
      */
     public function createAction(Request $request)
     {
@@ -71,13 +65,12 @@ class ArticleController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('article_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('api_article_show', array('id' => $entity->getId())));
         }
 
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
+        $response = new JsonResponse([], 500);
+
+        return $response->setFailure()->setErrorMessage('Unable to create entity');
     }
 
     /**
@@ -90,7 +83,6 @@ class ArticleController extends Controller
     private function createCreateForm(Article $entity)
     {
         $form = $this->createForm(new ArticleType(), $entity, array(
-            'action' => $this->generateUrl('article_create'),
             'method' => 'POST',
         ));
 
@@ -100,29 +92,11 @@ class ArticleController extends Controller
     }
 
     /**
-     * Displays a form to create a new Article entity.
-     *
-     * @Route("/new", name="article_new")
-     * @Method("GET")
-     * @Template()
-     */
-    public function newAction()
-    {
-        $entity = new Article();
-        $form   = $this->createCreateForm($entity);
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
-
-    /**
      * Finds and displays a Article entity.
      *
-     * @Route("/{id}", name="article_show")
+     * @Route("/{id}", name="api_article_show")
      * @Method("GET")
-     * @Template()
+     * @return JsonResponse
      */
     public function showAction($id)
     {
@@ -131,68 +105,19 @@ class ArticleController extends Controller
         $entity = $em->getRepository('AppBundle:Article')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Article entity.');
+            $response = new JsonResponse([], 404);
+            return $response->setFailure()->setErrorMessage('Unable to find Article entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        );
+        return new JsonResponse($entity);
     }
 
-    /**
-     * Displays a form to edit an existing Article entity.
-     *
-     * @Route("/{id}/edit", name="article_edit")
-     * @Method("GET")
-     * @Template()
-     */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AppBundle:Article')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Article entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    /**
-    * Creates a form to edit a Article entity.
-    *
-    * @param Article $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Article $entity)
-    {
-        $form = $this->createForm(new ArticleType(), $entity, array(
-            'action' => $this->generateUrl('article_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
-
-        return $form;
-    }
     /**
      * Edits an existing Article entity.
      *
-     * @Route("/{id}", name="article_update")
+     * @Route("/{id}", name="api_article_update")
      * @Method("PUT")
-     * @Template("AppBundle:Article:edit.html.twig")
+     * @return JsonResponse
      */
     public function updateAction(Request $request, $id)
     {
@@ -201,65 +126,60 @@ class ArticleController extends Controller
         $entity = $em->getRepository('AppBundle:Article')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Article entity.');
+            $response = new JsonResponse([], 404);
+            return $response->setFailure()->setErrorMessage('Unable to find Article entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('article_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('api_article_show', array('id' => $id)));
         }
 
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-    /**
-     * Deletes a Article entity.
-     *
-     * @Route("/{id}", name="article_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, $id)
-    {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('AppBundle:Article')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Article entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('article'));
+        return new JsonResponse($entity);
     }
 
     /**
-     * Creates a form to delete a Article entity by id.
+     * Creates a form to edit a Article entity.
      *
-     * @param mixed $id The entity id
+     * @param Article $entity The entity
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id)
+    private function createEditForm(Article $entity)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('article_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+        $form = $this->createForm(new ArticleType(), $entity, array(
+            'method' => 'PUT',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Update'));
+
+        return $form;
+    }
+
+    /**
+     * Deletes a Article entity.
+     *
+     * @Route("/{id}", name="api_article_delete")
+     * @Method("DELETE")
+     * @return JsonResponse
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('AppBundle:Article')->find($id);
+
+        if (!$entity) {
+            $response = new JsonResponse([], 404);
+            return $response->setFailure()->setErrorMessage('Unable to find Article entity.');
+        }
+
+        $em->remove($entity);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('api_article'));
     }
 }
