@@ -7,7 +7,7 @@ default:
                 - AppBundle\Tests\Features\Context\FeatureContext: ~
         api:
             paths:
-                - %paths.base%/src/AppBundle/Tests/Features/app.feature
+                - %paths.base%/src/AppBundle/Tests/Features/api.feature
             contexts:
                 - AppBundle\Tests\Features\Context\FeatureContext: ~
     extensions:
