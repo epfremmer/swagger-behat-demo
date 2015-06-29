@@ -1,6 +1,6 @@
 {
     "name": "epfremme/symfony.behat.demo",
-    "license": "proprietary",
+    "license": "MIT",
     "type": "project",
     "repositories": [
         {
