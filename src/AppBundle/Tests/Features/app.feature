@@ -6,6 +6,12 @@ Feature: Front-end application testing
     Then the response status code should be 200
     And I should see "Hello world"
 
+  Scenario: Home page displays name parameter
+    Given I am authenticated
+    When I go to "/Eddie"
+    Then the response status code should be 200
+    And I should see "Hello Eddie"
+
   Scenario: Articles page displays
     Given I am authenticated
     When I go to "/article"
