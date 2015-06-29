@@ -83,8 +83,10 @@ definitions:
       - content
   Error:
     properties:
-      code:
+      errorCode:
         type: integer
         format: int32
-      message:
+      errorMessage:
         type: string
+    required:
+      - errorMessage
