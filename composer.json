@@ -2,6 +2,16 @@
     "name": "epfremme/symfony.behat.demo",
     "license": "proprietary",
     "type": "project",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:epfremmer/swagger.git"
+        },
+        {
+            "type": "git",
+            "url": "git@github.com:epfremmer/swagger-bundle.git"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "": "src/",
@@ -19,10 +29,19 @@
         "symfony/monolog-bundle": "~2.4",
         "sensio/distribution-bundle": "~4.0",
         "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
-        "incenteev/composer-parameter-handler": "~2.0"
+        "incenteev/composer-parameter-handler": "~2.0",
+        "jms/serializer-bundle": "^1.0"
     },
     "require-dev": {
-        "sensio/generator-bundle": "~2.3"
+        "sensio/generator-bundle": "~2.3",
+        "phpunit/phpunit": "^4.7",
+        "behat/behat": "~3.0",
+        "behat/symfony2-extension": "~2.0",
+        "behat/mink": "~1.6",
+        "behat/mink-extension": "~2.0",
+        "behat/mink-browserkit-driver": "~1.2",
+        "justinrainbow/json-schema": "~1.3",
+        "epfremmer/swagger-bundle": "dev-develop"
     },
     "scripts": {
         "post-root-package-install": [
