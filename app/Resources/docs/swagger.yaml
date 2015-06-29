@@ -1,12 +1,12 @@
-# this is an example of the Uber API
-# as a demonstration of an API spec in YAML
+# this is a demonstration of
+# an API spec in YAML
 swagger: '2.0'
 info:
-  title: Uber API
-  description: Move your app forward with the Uber API
+  title: Demo API
+  description: Demo API document for testing swagger-bundle services
   version: "1.0.0"
 # the domain of the service
-host: api.uber.com
+host: www.swagger-behat-demo.dev
 # array of all schemes that your API supports
 schemes:
   - https
@@ -58,11 +58,12 @@ definitions:
   Articles:
     type: array
     items:
-      $ref: '#/definitions/Activity'
+      $ref: '#/definitions/Article'
   Article:
     properties:
       id:
-        type: int32
+        type: integer
+        format: int32
         description: ID
       title:
         type: string
