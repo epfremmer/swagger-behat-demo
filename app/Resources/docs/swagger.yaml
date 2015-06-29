@@ -1,0 +1,89 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: Uber API
+  description: Move your app forward with the Uber API
+  version: "1.0.0"
+# the domain of the service
+host: api.uber.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /v1/article:
+    get:
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/Articles'
+    post:
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/Articles'
+        500:
+          schema:
+            $ref: '#/definitions/Error'
+  /v1/article/{id}:
+    get:
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/Article'
+        404:
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/Article'
+        404:
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/Article'
+        404:
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Articles:
+    type: array
+    items:
+      $ref: '#/definitions/Activity'
+  Article:
+    properties:
+      id:
+        type: int32
+        description: ID
+      title:
+        type: string
+        description: Article title
+      content:
+        type: string
+        description: Article content
+      date_created:
+        type: string
+        description: Date Created
+      date_modified:
+        type: string
+        description: Date Modified
+    required:
+      - id
+      - title
+      - content
+  Error:
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
