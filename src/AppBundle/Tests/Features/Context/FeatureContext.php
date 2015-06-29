@@ -94,6 +94,20 @@ class FeatureContext extends MinkContext implements MinkAwareContext, SnippetAcc
     }
 
     /**
+     * @beforeScenario
+     */
+    public function resetDatabase()
+    {
+        exec(sprintf(
+            '%s && %s && %s && %s',
+            'cd /var/www',
+            'app/console --env=test doctrine:database:drop --if-exists --force',
+            'app/console --env=test doctrine:database:create',
+            'app/console --env=test doctrine:schema:create'
+        ));
+    }
+
+    /**
      * Return the current session driver
      *
      * @return BrowserKitDriver|\Behat\Mink\Driver\DriverInterface
