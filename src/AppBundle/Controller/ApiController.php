@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\StatsBundle\Response\JsonResponse;
+use AppBundle\Response\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -21,20 +21,7 @@ class ApiController extends Controller
     /**
      * Lists all Article entities.
      *
-     * @Route("/", name="api_default")
-     * @Route("/{$name}", name="api_default")
-     * @Method("GET")
-     * @return JsonResponse
-     */
-    public function defaultAction($name = 'world')
-    {
-        return new JsonResponse(sprintf('hello %s', $name));
-    }
-
-    /**
-     * Lists all Article entities.
-     *
-     * @Route("/", name="api_article")
+     * @Route("/article", name="api_article")
      * @Method("GET")
      * @return JsonResponse
      */
@@ -50,7 +37,7 @@ class ApiController extends Controller
     /**
      * Creates a new Article entity.
      *
-     * @Route("/", name="api_article_create")
+     * @Route("/article", name="api_article_create")
      * @Method("POST")
      * @return JsonResponse
      */
@@ -94,7 +81,7 @@ class ApiController extends Controller
     /**
      * Finds and displays a Article entity.
      *
-     * @Route("/{id}", name="api_article_show")
+     * @Route("/article/{id}", name="api_article_show")
      * @Method("GET")
      * @return JsonResponse
      */
@@ -115,7 +102,7 @@ class ApiController extends Controller
     /**
      * Edits an existing Article entity.
      *
-     * @Route("/{id}", name="api_article_update")
+     * @Route("/article/{id}", name="api_article_update")
      * @Method("PUT")
      * @return JsonResponse
      */
@@ -163,7 +150,7 @@ class ApiController extends Controller
     /**
      * Deletes a Article entity.
      *
-     * @Route("/{id}", name="api_article_delete")
+     * @Route("/article/{id}", name="api_article_delete")
      * @Method("DELETE")
      * @return JsonResponse
      */
