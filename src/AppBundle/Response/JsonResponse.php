@@ -5,7 +5,7 @@
  * @author Douglas Linsmeyer <douglas.linsmeyer@nerdery.com>
  * @author Edward Pfremmer <epfremme@nerdery.com>
  */
-namespace AppBundle\StatsBundle\Response;
+namespace AppBundle\Response;
 
 use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse as BaseJsonResponse;
@@ -138,6 +138,8 @@ class JsonResponse extends BaseJsonResponse
         $data = array_merge($this->defaultData, $this->pristineData);
         $data = $this->getSerializer()->serialize($data, 'json');
 
-        $this->setData($data);
+        $this->data = $data;
+
+        $this->update();
     }
 }
