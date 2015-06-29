@@ -1,5 +1,6 @@
 {
-    "name": "epfremme/symfony.behat.demo",
+    "name": "epfremmer/symfony-behat-demo",
+    "description": "Example symfony application for demonstrating Behat test capabilities",
     "license": "MIT",
     "type": "project",
     "repositories": [
