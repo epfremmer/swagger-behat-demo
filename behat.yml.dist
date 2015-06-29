@@ -1,10 +1,5 @@
 default:
     suites:
-        default:
-            paths:
-                - %paths.base%/src/AppBundle/Tests/Features
-            contexts:
-                - AppBundle\Tests\Features\Context\FeatureContext: ~
         app:
             paths:
                 - %paths.base%/src/AppBundle/Tests/Features/app.feature
