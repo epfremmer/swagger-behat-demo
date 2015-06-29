@@ -1,0 +1,25 @@
+default:
+    suites:
+        default:
+            paths:
+                - %paths.base%/src/AppBundle/Tests/Features
+            contexts:
+                - AppBundle\Tests\Features\Context\FeatureContext: ~
+        app:
+            paths:
+                - %paths.base%/src/AppBundle/Tests/Features/app.feature
+            contexts:
+                - AppBundle\Tests\Features\Context\FeatureContext: ~
+        api:
+            paths:
+                - %paths.base%/src/AppBundle/Tests/Features/app.feature
+            contexts:
+                - AppBundle\Tests\Features\Context\FeatureContext: ~
+    extensions:
+        Behat\Symfony2Extension: ~
+        Behat\MinkExtension:
+          sessions:
+            default:
+              symfony2: ~
+    testers:
+        rerun_cache: .behat_rerun_cache
